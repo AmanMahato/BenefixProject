@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Author: Aman K Mahato
- *This is the main control of the App
+ *Author: Aman K Mahato
+ *This is the main control of the App (Start Debug From Here)
  *To run this app, put all the pdf file in Resources folder
  * The output is generated as an Excel file named BenefixResult in root directory
  */
@@ -31,6 +31,13 @@ public class App {
         PdfReader reader = null;
         int numOfPage = 0;
         Integer startingRow = 2;
+        //setting header of the Excel File
+        int headerIndex=0;
+        while(headerIndex<headers.length){
+            row = spreadsheet.createRow(headerIndex);//creating one row for each header
+            Cell cell = row.createCell(0);
+            cell.setCellValue(headers[headerIndex++]);
+        }
         for(String fileName:fileNames) {
             try {
                 reader = new PdfReader("src/Resources/" +fileName);
@@ -53,6 +60,7 @@ public class App {
                 }
                 int pageLineSize = pageIndividualLines.size();
                 String[] dates = pageIndividualLines.get(0).split(" ");
+                //extracting all the datas from the first four lines of each page.
                 String startDate = dates[4];
                 String endDate = dates[6];
                 String planName = HelperClass.getPlanName(pageIndividualLines.get(3));
@@ -88,13 +96,7 @@ public class App {
                 }
                 try {
                     Set<String> keyid = treeMap.keySet();
-                    int headerIndex=0;
                     for (String key : keyid) {
-                        while(headerIndex<headers.length){
-                            row = spreadsheet.createRow(0);
-                            Cell cell = row.createCell(headerIndex);
-                            cell.setCellValue((String) headers[headerIndex++]);
-                        }
                         int cellid = 0;
                         row = spreadsheet.createRow(rowid++);
                         Object[] objectArr = treeMap.get(key);
